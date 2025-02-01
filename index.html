@@ -2,12 +2,16 @@
 <html>
 <head>
     <title>Landscaping Price Estimator</title>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA1ioQWFb46k7v7Ds8DHOlxjrPf30cKrXI&libraries=places"></script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA1ioQWFb46k7v7Ds8DHOlxjrPf30cKrXI&libraries=places"></script>
     <script>
         function initAutocomplete() {
             try {
                 var input = document.getElementById('address');
-                var autocomplete = new google.maps.places.Autocomplete(input);
+                if (google && google.maps && google.maps.places) {
+                    var autocomplete = new google.maps.places.Autocomplete(input);
+                } else {
+                    throw new Error('Google Maps API not loaded');
+                }
             } catch (error) {
                 console.error('Error initializing Google Maps Autocomplete:', error);
                 alert('Error initializing Google Maps Autocomplete. Please try again later.');
@@ -32,9 +36,17 @@
                 alert('Error calculating price. Please try again.');
             }
         }
+
+        window.onload = function() {
+            if (google && google.maps && google.maps.places) {
+                initAutocomplete();
+            } else {
+                console.error('Google Maps API not loaded');
+            }
+        };
     </script>
 </head>
-<body onload="initAutocomplete()">
+<body>
     <h2>Landscaping Pricing Estimator</h2>
     <p>Enter your address to estimate the lawn cutting cost:</p>
     <input id="address" type="text" placeholder="Enter Address">
