@@ -2,11 +2,30 @@
 <html>
 <head>
     <title>Landscaping Price Estimator</title>
-    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_API_KEY&libraries=places"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_API_KEY&libraries=places,drawing,geometry"></script>
     <style>
+        /* Keeping your existing style */
+        body {
+            font-family: Arial, sans-serif;
+        }
+        input {
+            width: 300px;
+            padding: 5px;
+            margin: 5px;
+        }
+        button {
+            padding: 5px 10px;
+            margin: 5px;
+            cursor: pointer;
+        }
         #map {
+            width: 600px;
             height: 400px;
-            width: 100%;
+            margin-top: 10px;
+        }
+        #result {
+            font-size: 18px;
+            margin-top: 10px;
         }
     </style>
 </head>
@@ -20,9 +39,7 @@
     <p id="result"></p>
 
     <script>
-        let map;
-        let geocoder;
-        let drawingManager;
+        let map, geocoder, drawingManager;
         let totalArea = 0;
 
         function initAutocomplete() {
@@ -33,9 +50,9 @@
 
         function initMap() {
             map = new google.maps.Map(document.getElementById("map"), {
-                center: { lat: 45.4215, lng: -75.6972 }, // Default to Canada
                 zoom: 18,
-                mapTypeId: 'satellite'
+                center: { lat: 45.4215, lng: -75.6972 }, // Default: Ottawa, Canada
+                mapTypeId: "satellite"
             });
 
             geocoder = new google.maps.Geocoder();
@@ -45,7 +62,7 @@
                 drawingControl: true,
                 drawingControlOptions: {
                     position: google.maps.ControlPosition.TOP_CENTER,
-                    drawingModes: ['polygon']
+                    drawingModes: ["polygon"]
                 },
                 polygonOptions: {
                     fillColor: "#00FF00",
@@ -58,8 +75,8 @@
             });
 
             drawingManager.setMap(map);
-            
-            google.maps.event.addListener(drawingManager, 'overlaycomplete', function(event) {
+
+            google.maps.event.addListener(drawingManager, "overlaycomplete", function(event) {
                 let polygon = event.overlay;
                 let area = google.maps.geometry.spherical.computeArea(polygon.getPath());
                 totalArea = Math.round(area);
@@ -69,15 +86,15 @@
 
         function getLawnArea() {
             let address = document.getElementById("address").value;
-            geocoder.geocode({ 'address': address }, function(results, status) {
-                if (status === 'OK') {
+            geocoder.geocode({ address: address }, function(results, status) {
+                if (status === "OK") {
                     map.setCenter(results[0].geometry.location);
                     new google.maps.Marker({
                         map: map,
                         position: results[0].geometry.location
                     });
                 } else {
-                    alert("Geocode was not successful: " + status);
+                    alert("Address not found: " + status);
                 }
             });
         }
@@ -85,10 +102,9 @@
         function calculatePrice() {
             let pricePerSqft = 0.10;
             let totalPrice = totalArea * pricePerSqft;
-            document.getElementById("result").innerHTML = `
-                Estimated Lawn Area: ${totalArea} sq. ft.<br>
-                Total Price: $${totalPrice.toFixed(2)}
-            `;
+            document.getElementById("result").innerHTML =
+                `Estimated Lawn Area: ${totalArea} sq. ft.<br>
+                Total Price: $${totalPrice.toFixed(2)}`;
         }
     </script>
 
