@@ -4,7 +4,6 @@
     <title>Landscaping Price Estimator</title>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA1ioQWFb46k7v7Ds8DHOlxjrPf30cKrXI&libraries=places,drawing,geometry&callback=initMap" async defer></script>
     <style>
-        /* Keeping your existing style */
         body {
             font-family: Arial, sans-serif;
         }
@@ -90,7 +89,7 @@
             geocoder.geocode({ address: address }, function(results, status) {
                 if (status === "OK") {
                     map.setCenter(results[0].geometry.location);
-                    new google.maps.Marker({
+                    new google.maps.marker.AdvancedMarkerElement({
                         map: map,
                         position: results[0].geometry.location
                     });
