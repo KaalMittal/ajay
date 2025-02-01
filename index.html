@@ -1,12 +1,29 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ajay Html page</title>
+    <title>Landscaping Price Estimator</title>
+    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_API_KEY&libraries=places"></script>
+    <script>
+        function initAutocomplete() {
+            var input = document.getElementById('address');
+            var autocomplete = new google.maps.places.Autocomplete(input);
+        }
+
+        function calculatePrice() {
+            var sqft = Math.floor(Math.random() * 5000) + 1000; // Simulating lawn area detection
+            var pricePerSqft = 0.10; // $0.10 per sqft
+            var totalPrice = sqft * pricePerSqft;
+            document.getElementById("result").innerHTML = 
+                "Estimated Lawn Area: " + sqft + " sq. ft.<br>" +
+                "Total Price: $" + totalPrice.toFixed(2);
+        }
+    </script>
 </head>
-<body>
-    <h1>Hello, World!this is my first program to run. took me 5 hour to setup.</h1>
-    <p>This is my live GitHub page! my name is ajay mittal.but i cannaot.</p>
+<body onload="initAutocomplete()">
+    <h2>Landscaping Pricing Estimator</h2>
+    <p>Enter your address to estimate the lawn cutting cost:</p>
+    <input id="address" type="text" placeholder="Enter Address">
+    <button onclick="calculatePrice()">Get Price Estimate</button>
+    <p id="result"></p>
 </body>
 </html>
