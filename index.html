@@ -2,14 +2,15 @@
 <html>
 <head>
     <title>Landscaping Price Estimator</title>
-    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_API_KEY&libraries=places,drawing,geometry"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA1ioQWFb46k7v7Ds8DHOlxjrPf30cKrXI&libraries=places,drawing,geometry&callback=initMap" async defer></script>
     <style>
         /* Keeping your existing style */
         body {
             font-family: Arial, sans-serif;
         }
         input {
-            width: 300px;
+            width: 100%;
+            max-width: 600px;
             padding: 5px;
             margin: 5px;
         }
@@ -107,7 +108,5 @@
                 Total Price: $${totalPrice.toFixed(2)}`;
         }
     </script>
-
-    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_API_KEY&libraries=places,drawing,geometry&callback=initMap" async defer></script>
 </body>
 </html>
