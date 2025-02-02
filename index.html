@@ -2,32 +2,15 @@
 <html>
 <head>
     <title>Landscaping Price Estimator</title>
+    <!-- Remove any duplicate inline JavaScript code -->
     <script src="script.js"></script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA1ioQWFb46k7v7Ds8DHOlxjrPf30cKrXI&libraries=places,drawing,geometry&callback=initMap" async defer></script>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-        }
-        input {
-            width: 100%;
-            max-width: 600px;
-            padding: 5px;
-            margin: 5px;
-        }
-        button {
-            padding: 5px 10px;
-            margin: 5px;
-            cursor: pointer;
-        }
-        #map {
-            width: 600px;
-            height: 400px;
-            margin-top: 10px;
-        }
-        #result {
-            font-size: 18px;
-            margin-top: 10px;
-        }
+        body { font-family: Arial, sans-serif; }
+        input { width: 100%; max-width: 600px; padding: 5px; margin: 5px; }
+        button { padding: 5px 10px; margin: 5px; cursor: pointer; }
+        #map { width: 600px; height: 400px; margin-top: 10px; }
+        #result { font-size: 18px; margin-top: 10px; }
     </style>
 </head>
 <body onload="initAutocomplete()">
@@ -35,78 +18,9 @@
     <p>Enter your address to estimate the lawn cutting cost:</p>
     <input id="address" type="text" placeholder="Enter Address">
     <button onclick="getLawnArea()">Get Price Estimate</button>
-
+    <!-- Reset button for later use -->
+    <button onclick="resetPolygon()">Reset Area</button>
     <div id="map"></div>
     <p id="result"></p>
-
-    <script>
-        let map, geocoder, drawingManager;
-        let totalArea = 0;
-
-        function initAutocomplete() {
-            let input = document.getElementById("address");
-            let autocomplete = new google.maps.places.Autocomplete(input);
-            autocomplete.setFields(["geometry", "formatted_address"]);
-        }
-
-        function initMap() {
-            map = new google.maps.Map(document.getElementById("map"), {
-                zoom: 18,
-                center: { lat: 45.4215, lng: -75.6972 }, // Default: Ottawa, Canada
-                mapTypeId: "satellite"
-            });
-
-            geocoder = new google.maps.Geocoder();
-
-            drawingManager = new google.maps.drawing.DrawingManager({
-                drawingMode: google.maps.drawing.OverlayType.POLYGON,
-                drawingControl: true,
-                drawingControlOptions: {
-                    position: google.maps.ControlPosition.TOP_CENTER,
-                    drawingModes: ["polygon"]
-                },
-                polygonOptions: {
-                    fillColor: "#00FF00",
-                    fillOpacity: 0.4,
-                    strokeWeight: 2,
-                    clickable: false,
-                    editable: true,
-                    zIndex: 1
-                }
-            });
-
-            drawingManager.setMap(map);
-
-            google.maps.event.addListener(drawingManager, "overlaycomplete", function(event) {
-                let polygon = event.overlay;
-                let area = google.maps.geometry.spherical.computeArea(polygon.getPath());
-                totalArea = Math.round(area);
-                calculatePrice();
-            });
-        }
-
-        function getLawnArea() {
-            let address = document.getElementById("address").value;
-            geocoder.geocode({ address: address }, function(results, status) {
-                if (status === "OK") {
-                    map.setCenter(results[0].geometry.location);
-                    new google.maps.marker.AdvancedMarkerElement({
-                        map: map,
-                        position: results[0].geometry.location
-                    });
-                } else {
-                    alert("Address not found: " + status);
-                }
-            });
-        }
-
-        function calculatePrice() {
-            let pricePerSqft = 0.10;
-            let totalPrice = totalArea * pricePerSqft;
-            document.getElementById("result").innerHTML =
-                `Estimated Lawn Area: ${totalArea} sq. ft.<br>
-                Total Price: $${totalPrice.toFixed(2)}`;
-        }
-    </script>
 </body>
 </html>
